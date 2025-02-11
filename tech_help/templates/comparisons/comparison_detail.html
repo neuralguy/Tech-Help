@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ comparison.title }} - Tech Help{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <h1 class="text-3xl font-bold text-white mb-8">{{ comparison.title }}</h1>
+    
+    <!-- Устройства -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {% for device in devices %}
+        <div class="card relative">
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'comparisons:vote_for_device' comparison.slug device.slug %}">
+                {% csrf_token %}
+                <button type="submit" 
+                        class="absolute top-2 right-2 p-2 rounded-full {% if user_vote.device == device %}bg-blue-600{% else %}bg-slate-700{% endif %} hover:bg-blue-700">
+                    <i class="fas fa-thumbs-up"></i>
+                </button>
+            </form>
+            {% endif %}
+            
+            <img src="{{ device.image.url }}" 
+                 alt="{{ device.name }}"
+                 class="w-full h-48 object-cover">
+            <div class="p-4">
+                <h2 class="text-xl font-semibold text-white mb-2">{{ device.name }}</h2>
+                <p class="text-gray-400 mb-4">{{ device.manufacturer }}</p>
+                <p class="text-2xl font-bold text-blue-400">${{ device.price }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Сравнение характеристик -->
+    <div class="card p-6">
+        <h2 class="text-2xl font-bold text-white mb-6">Сравнение характеристик</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="text-left p-4 border-b border-slate-700">Характеристика</th>
+                        {% for device in devices %}
+                        <th class="text-left p-4 border-b border-slate-700">{{ device.name }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for spec_name, spec_data in specifications.items %}
+                    <tr class="hover:bg-slate-700">
+                        <td class="p-4 border-b border-slate-700">
+                            {{ spec_name }}
+                            {% if spec_data.unit %}
+                            <span class="text-gray-400">({{ spec_data.unit }})</span>
+                            {% endif %}
+                        </td>
+                        {% for device in devices %}
+                        <td class="p-4 border-b border-slate-700">
+                            {% with value=spec_data.values|get_item:device.id %}
+                            {% if value %}
+                            <span class="font-semibold {% if spec_data.is_higher_better and forloop.parentloop.counter == 1 %}text-green-400{% endif %}">
+                                {{ value }}
+                            </span>
+                            {% else %}
+                            <span class="text-gray-500">—</span>
+                            {% endif %}
+                            {% endwith %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

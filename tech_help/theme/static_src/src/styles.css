@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Кастомные стили */
+@layer components {
+    /* Анимации */
+    .transition-all {
+        @apply transition-all duration-300 ease-in-out;
+    }
+    
+    /* Кнопки */
+    .btn {
+        @apply px-4 py-2 rounded-lg transition-all;
+    }
+    
+    .btn-primary {
+        @apply btn bg-blue-600 text-white hover:bg-blue-700;
+    }
+    
+    .btn-secondary {
+        @apply btn bg-slate-700 text-white hover:bg-slate-600;
+    }
+    
+    /* Карточки */
+    .card {
+        @apply bg-slate-800 rounded-lg border border-slate-700 overflow-hidden;
+    }
+    
+    /* Формы */
+    .form-input {
+        @apply bg-slate-700 border-slate-600 rounded-lg text-white focus:border-blue-500 focus:ring-blue-500;
+    }
+    
+    .form-label {
+        @apply block text-sm font-medium text-gray-300 mb-1;
+    }
+    
+    /* Badges */
+    .badge {
+        @apply px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+    
+    .badge-blue {
+        @apply badge bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300;
+    }
+}
+
+/* Дополнительные стили для темной темы */
+:root {
+    color-scheme: dark;
+}
+
+body {
+    @apply bg-dark-primary text-gray-100;
+}
+
+/* Стили для скроллбара */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-slate-800;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-slate-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-500;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Навигация */
+.nav-link {
+    @apply text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors;
+}
+
+.nav-link.active {
+    @apply text-white bg-slate-700;
+}
+
+.mobile-nav-link {
+    @apply block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-slate-700;
+}
+
+.dropdown-item {
+    @apply block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-slate-700 w-full text-left;
+}
