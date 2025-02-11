@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     
     # Tailwind
     'tailwind',
-    'django_browser_reload',
     'theme',
+    'django_browser_reload',
     'django_summernote',
 ]
 
@@ -128,7 +128,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'theme' / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -11,11 +11,11 @@
     
     /* Кнопки */
     .btn {
-        @apply px-4 py-2 rounded-lg transition-all;
+        @apply px-4 py-2 rounded-lg transition-all duration-300 ease-in-out;
     }
     
     .btn-primary {
-        @apply btn bg-blue-600 text-white hover:bg-blue-700;
+        @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors;
     }
     
     .btn-secondary {
@@ -44,6 +44,23 @@
     .badge-blue {
         @apply badge bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300;
     }
+
+    /* Навигация */
+    .nav-link {
+        @apply text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors;
+    }
+
+    .nav-link.active {
+        @apply text-white bg-slate-700;
+    }
+
+    .mobile-nav-link {
+        @apply block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-slate-700;
+    }
+
+    .dropdown-item {
+        @apply block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-slate-700 w-full text-left;
+    }
 }
 
 /* Дополнительные стили для темной темы */
@@ -52,7 +69,7 @@
 }
 
 body {
-    @apply bg-dark-primary text-gray-100;
+    @apply bg-slate-900 text-gray-100;
 }
 
 /* Стили для скроллбара */
@@ -87,21 +104,4 @@ body {
 
 .animate-fadeIn {
     animation: fadeIn 0.3s ease-out;
-}
-
-/* Навигация */
-.nav-link {
-    @apply text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors;
-}
-
-.nav-link.active {
-    @apply text-white bg-slate-700;
-}
-
-.mobile-nav-link {
-    @apply block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-slate-700;
-}
-
-.dropdown-item {
-    @apply block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-slate-700 w-full text-left;
 }

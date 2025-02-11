@@ -85,7 +85,7 @@ def rate_article(request, slug):
                 defaults={'value': value}
             )
     
-    return redirect('article_detail', slug=slug)
+    return redirect('articles:article_detail', slug=slug)
 
 @login_required
 def article_create(request):

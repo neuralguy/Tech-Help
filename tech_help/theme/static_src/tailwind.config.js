@@ -34,7 +34,7 @@ module.exports = {
         /* JS 1: Ignore any JavaScript in node_modules folder. */
         // '!../../**/node_modules',
         /* JS 2: Process all JavaScript files in the project. */
-        // '../../**/*.js',
+        '../js/**/*.js',
 
         /**
          * Python: If you use Tailwind CSS classes in Python, uncomment the following line
@@ -49,7 +49,6 @@ module.exports = {
                 dark: {
                     'primary': '#0f172a',    // Основной фон
                     'secondary': '#1e293b',  // Вторичный фон
-                    'accent': '#3b82f6',     // Акцентный цвет (синий)
                 },
             },
             typography: {

@@ -344,16 +344,16 @@ select {
 */
 
 button,
-input:where([type='button']),
-input:where([type='reset']),
-input:where([type='submit']) {
-  -webkit-appearance: button;
-  /* 1 */
+input[type='button'],
+input[type='reset'],
+input[type='submit'] {
+  -webkit-appearance: none; /* Use 'none' instead of 'button' */
+  appearance: none;        /* Standard property for other browsers */
   background-color: transparent;
-  /* 2 */
   background-image: none;
-  /* 2 */
 }
+
+
 
 /*
 Use the modern Firefox focus style for all focusable elements.
@@ -394,6 +394,7 @@ Correct the cursor style of increment and decrement buttons in Safari.
 */
 
 [type='search'] {
+  appearance: none;
   -webkit-appearance: textfield;
   /* 1 */
   outline-offset: -2px;
@@ -533,9 +534,6 @@ iframe,
 embed,
 object {
   display: block;
-  /* 1 */
-  vertical-align: middle;
-  /* 2 */
 }
 
 /*
