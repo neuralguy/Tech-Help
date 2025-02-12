@@ -2,15 +2,14 @@ from django import forms
 from .models import Device, DeviceCategory, Specification, DeviceSpecification
 
 class DeviceForm(forms.ModelForm):
-    specifications = forms.JSONField(required=False, widget=forms.HiddenInput())
-    
     class Meta:
         model = Device
-        fields = ['name', 'manufacturer', 'category', 'price', 'release_date', 
-                 'image', 'description', 'specifications']
+        fields = ['name', 'description', 'main_image', 'category']
         widgets = {
-            'release_date': forms.DateInput(attrs={'type': 'date'}),
-            'description': forms.Textarea(attrs={'rows': 4}),
+            'name': forms.TextInput(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
+            'description': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900', 'rows': 4}),
+            'main_image': forms.FileInput(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
+            'category': forms.Select(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -37,6 +36,10 @@ class DeviceForm(forms.ModelForm):
                     value=spec_data['value']
                 )
         return device
+
+    def clean_images(self):
+        """Метод для обработки дополнительных изображений"""
+        return self.files.getlist('images')
 
 class SpecificationForm(forms.ModelForm):
     class Meta:

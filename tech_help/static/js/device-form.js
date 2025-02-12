@@ -93,4 +93,13 @@ document.addEventListener('DOMContentLoaded', function() {
             unitInput.value = option.dataset.unit;
         }
     };
+
+    // Обработка множественной загрузки файлов
+    const imageInput = document.querySelector('input[name="images"]');
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            console.log('Selected files:', files);
+        });
+    }
 }); 

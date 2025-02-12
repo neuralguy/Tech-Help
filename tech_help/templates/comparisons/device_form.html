@@ -13,123 +13,53 @@ const existingSpecs = {{ specifications|safe }};
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <div class="max-w-3xl mx-auto">
-        <h1 class="text-3xl font-bold text-white mb-8">{{ title }}</h1>
-        
-        <form method="post" enctype="multipart/form-data" class="space-y-6" id="deviceForm">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">
+            {% if device %}Редактировать{% else %}Создать{% endif %} устройство
+        </h1>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-6 bg-slate-800 p-6 rounded-lg border border-slate-700">
             {% csrf_token %}
-            {{ form.specifications }}
             
-            {% if form.non_field_errors %}
-            <div class="bg-red-500 text-white p-4 rounded-lg mb-6">
-                {{ form.non_field_errors }}
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Название</label>
+                {{ form.name }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Описание</label>
+                {{ form.description }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Главное изображение</label>
+                <input type="file" name="main_image" class="w-full rounded-lg border-gray-300 bg-white text-gray-900">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Дополнительные изображения</label>
+                <input type="file" name="images" multiple class="w-full rounded-lg border-gray-300 bg-white text-gray-900">
+            </div>
+
+            {% if existing_images %}
+            <div>
+                <h3 class="text-sm font-medium text-gray-300 mb-2">Текущие изображения:</h3>
+                <div class="grid grid-cols-3 gap-4">
+                    {% for image in existing_images %}
+                    <div class="relative">
+                        <img src="{{ image.image.url }}" alt="" class="w-full h-32 object-cover rounded">
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
             {% endif %}
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Название -->
-                <div>
-                    <label for="{{ form.name.id_for_label }}" class="form-label">
-                        Название
-                    </label>
-                    {{ form.name }}
-                    {% if form.name.errors %}
-                    <p class="text-red-500 text-sm mt-1">{{ form.name.errors.0 }}</p>
-                    {% endif %}
-                </div>
-                
-                <!-- Производитель -->
-                <div>
-                    <label for="{{ form.manufacturer.id_for_label }}" class="form-label">
-                        Производитель
-                    </label>
-                    {{ form.manufacturer }}
-                    {% if form.manufacturer.errors %}
-                    <p class="text-red-500 text-sm mt-1">{{ form.manufacturer.errors.0 }}</p>
-                    {% endif %}
-                </div>
-                
-                <!-- Категория -->
-                <div>
-                    <label for="{{ form.category.id_for_label }}" class="form-label">
-                        Категория
-                    </label>
-                    {{ form.category }}
-                    {% if form.category.errors %}
-                    <p class="text-red-500 text-sm mt-1">{{ form.category.errors.0 }}</p>
-                    {% endif %}
-                </div>
-                
-                <!-- Цена -->
-                <div>
-                    <label for="{{ form.price.id_for_label }}" class="form-label">
-                        Цена
-                    </label>
-                    {{ form.price }}
-                    {% if form.price.errors %}
-                    <p class="text-red-500 text-sm mt-1">{{ form.price.errors.0 }}</p>
-                    {% endif %}
-                </div>
-                
-                <!-- Дата выпуска -->
-                <div>
-                    <label for="{{ form.release_date.id_for_label }}" class="form-label">
-                        Дата выпуска
-                    </label>
-                    {{ form.release_date }}
-                    {% if form.release_date.errors %}
-                    <p class="text-red-500 text-sm mt-1">{{ form.release_date.errors.0 }}</p>
-                    {% endif %}
-                </div>
-                
-                <!-- Изображение -->
-                <div>
-                    <label for="{{ form.image.id_for_label }}" class="form-label">
-                        Изображение
-                    </label>
-                    {% if device and device.image %}
-                    <div class="mb-2">
-                        <img src="{{ device.image.url }}" alt="{{ device.name }}" class="w-32 h-32 object-cover rounded">
-                    </div>
-                    {% endif %}
-                    {{ form.image }}
-                    {% if form.image.errors %}
-                    <p class="text-red-500 text-sm mt-1">{{ form.image.errors.0 }}</p>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <!-- Описание -->
+
             <div>
-                <label for="{{ form.description.id_for_label }}" class="form-label">
-                    Описание
-                </label>
-                {{ form.description }}
-                {% if form.description.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.description.errors.0 }}</p>
-                {% endif %}
+                <label class="block text-sm font-medium text-gray-300 mb-2">Категория</label>
+                {{ form.category }}
             </div>
-            
-            <!-- Спецификации -->
-            <div>
-                <h3 class="text-xl font-semibold text-white mb-4">Характеристики</h3>
-                <div id="specificationsContainer" class="space-y-4">
-                    <!-- JavaScript будет добавлять сюда поля спецификаций -->
-                </div>
-                <button type="button" id="addSpecification" class="btn-secondary mt-4">
-                    Добавить характеристику
-                </button>
-            </div>
-            
-            <!-- Кнопки -->
-            <div class="flex justify-end gap-4">
-                <a href="{% url 'comparisons:device_list' %}" class="btn-secondary">
-                    Отмена
-                </a>
-                <button type="submit" class="btn-primary">
-                    {% if device %}Сохранить{% else %}Создать{% endif %}
-                </button>
-            </div>
+
+            <button type="submit" class="w-full btn-primary">Сохранить</button>
         </form>
     </div>
 </div>

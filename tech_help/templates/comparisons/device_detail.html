@@ -1,14 +1,45 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+{% endblock %}
 
 {% block title %}{{ device.name }} - Tech Help{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4">
+<div class="container mx-auto px-4 py-8">
+    <!-- Карусель изображений -->
+    <div class="swiper device-carousel mb-8">
+        <div class="swiper-wrapper">
+            {% if device.main_image %}
+            <div class="swiper-slide">
+                <img src="{{ device.main_image.url }}" alt="{{ device.name }}" class="w-full h-96 object-cover rounded-lg">
+            </div>
+            {% endif %}
+            {% for image in images %}
+            <div class="swiper-slide">
+                <img src="{{ image.image.url }}" alt="{{ device.name }}" class="w-full h-96 object-cover rounded-lg">
+            </div>
+            {% endfor %}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+
+    <!-- Остальной контент -->
+    <h1 class="text-3xl font-bold mb-4">{{ device.name }}</h1>
+
     <!-- Кнопки управления -->
     {% if user.is_staff %}
     <div class="flex justify-end gap-4 mb-6">
         <a href="{% url 'comparisons:device_edit' device.slug %}" class="btn-secondary">
             <i class="fas fa-edit mr-2"></i>Редактировать
+        </a>
+        <a href="{% url 'comparisons:device_delete' device.slug %}" class="btn-danger">
+            Удалить
         </a>
     </div>
     {% endif %}
@@ -16,11 +47,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Изображение и основная информация -->
         <div>
-            <img src="{{ device.image.url }}" 
-                 alt="{{ device.name }}"
-                 class="w-full rounded-lg mb-6">
             <div class="card p-6">
-                <h1 class="text-3xl font-bold text-white mb-4">{{ device.name }}</h1>
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div>
                         <span class="text-gray-400">Производитель</span>
@@ -39,7 +66,9 @@
                         <p class="text-2xl font-bold text-blue-400">${{ device.price }}</p>
                     </div>
                 </div>
-                <p class="text-gray-300">{{ device.description }}</p>
+                <div class="prose prose-invert max-w-none">
+                    {{ device.description|linebreaks }}
+                </div>
             </div>
         </div>
 
@@ -93,4 +122,24 @@
         </a>
     </div>
 </div>
+
+<script>
+    const swiper = new Swiper('.device-carousel', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+    });
+</script>
 {% endblock %} 

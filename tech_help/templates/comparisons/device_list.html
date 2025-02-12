@@ -3,7 +3,7 @@
 {% block title %}Устройства - Tech Help{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4">
+<div class="container mx-auto px-4 py-8">
     <!-- Заголовок и кнопки управления -->
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-white">Устройства</h1>
@@ -53,29 +53,34 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {% for device in devices %}
         <div class="card hover:scale-105 transition-all">
-            <img src="{{ device.image.url }}" 
+            {% if device.main_image %}
+            <img src="{{ device.main_image.url }}" 
                  alt="{{ device.name }}"
                  class="w-full h-48 object-cover">
+            {% endif %}
             <div class="p-4">
                 <div class="flex items-center gap-2 mb-2">
+                    {% if device.category %}
                     <span class="text-blue-400">{{ device.category.name }}</span>
-                    <span class="text-gray-500">•</span>
-                    <span class="text-gray-400">{{ device.manufacturer }}</span>
+                    {% endif %}
                 </div>
                 <h2 class="text-xl font-semibold mb-2">
+                    {% if device.slug %}
                     <a href="{% url 'comparisons:device_detail' device.slug %}" 
                        class="text-white hover:text-blue-400">
                         {{ device.name }}
                     </a>
+                    {% else %}
+                    {{ device.name }}
+                    {% endif %}
                 </h2>
                 <div class="flex justify-between items-center mt-4">
-                    <span class="text-2xl font-bold text-blue-400">
-                        ${{ device.price }}
-                    </span>
+                    {% if device.slug %}
                     <a href="{% url 'comparisons:device_detail' device.slug %}" 
                        class="btn-secondary">
                         Подробнее
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
