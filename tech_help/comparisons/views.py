@@ -2,9 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
-from .models import Device, DeviceCategory, Comparison, ComparisonVote, Specification, DeviceImage, Category
+from .models import Device, DeviceCategory, Comparison, ComparisonVote, DeviceImage, DeviceSpecification, SpecificationCategory, SpecificationField
 from django.contrib import messages
-from .forms import DeviceForm, SpecificationForm
+from .forms import DeviceForm, DeviceSpecificationFormSet, DeviceSpecificationForm, SpecificationFieldForm
 
 def device_list(request):
     devices = Device.objects.all().order_by('-created_at')
@@ -33,9 +33,16 @@ def device_list(request):
 
 def device_detail(request, slug):
     device = get_object_or_404(Device, slug=slug)
+    # Группируем характеристики по категориям
+    specifications = {}
+    for category in SpecificationCategory.objects.all():
+        specs = device.specifications.filter(field__category=category).select_related('field')
+        if specs.exists():
+            specifications[category] = specs
+    
     return render(request, 'comparisons/device_detail.html', {
         'device': device,
-        'images': device.images.all()
+        'specifications': specifications,
     })
 
 @login_required
@@ -64,28 +71,26 @@ def comparison_detail(request, slug):
     specs = {}
     for device in devices:
         for spec in device.specifications.all():
-            if spec.specification.name not in specs:
-                specs[spec.specification.name] = {
-                    'unit': spec.specification.unit,
-                    'is_higher_better': spec.specification.is_higher_better,
+            if spec.field.name not in specs:
+                specs[spec.field.name] = {
+                    'unit': spec.field.unit,
                     'values': {}
                 }
-            specs[spec.specification.name]['values'][device.id] = spec.value
-    
-    # Получаем голос пользователя
-    user_vote = None
-    if request.user.is_authenticated:
-        user_vote = ComparisonVote.objects.filter(
-            comparison=comparison,
-            user=request.user
-        ).first()
+            specs[spec.field.name]['values'][device.id] = spec.value
     
     context = {
         'comparison': comparison,
         'devices': devices,
         'specifications': specs,
-        'user_vote': user_vote,
+        'user_vote': None
     }
+    
+    if request.user.is_authenticated:
+        context['user_vote'] = ComparisonVote.objects.filter(
+            comparison=comparison,
+            user=request.user
+        ).first()
+    
     return render(request, 'comparisons/comparison_detail.html', context)
 
 @login_required
@@ -119,35 +124,32 @@ def get_device_specs(request):
 def device_create(request):
     if request.method == 'POST':
         form = DeviceForm(request.POST, request.FILES)
-        print("FILES:", request.FILES)  # Отладка
-        print("POST:", request.POST)    # Отладка
-        
         if form.is_valid():
             device = form.save()
             
-            # Обработка дополнительных изображений
-            images = request.FILES.getlist('images')
-            print("Additional images:", images)  # Отладка
+            # Обработка характеристик
+            formset = DeviceSpecificationFormSet(
+                request.POST,
+                instance=device,
+                queryset=DeviceSpecification.objects.none()
+            )
             
-            if images:
-                for order, image in enumerate(images):
-                    DeviceImage.objects.create(
-                        device=device,
-                        image=image,
-                        order=order
-                    )
-                messages.success(request, 'Устройство и изображения успешно созданы!')
-            else:
-                messages.success(request, 'Устройство успешно создано!')
-            
-            return redirect('comparisons:device_detail', slug=device.slug)
-        else:
-            print("Form errors:", form.errors)  # Отладка
-            messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
+            if formset.is_valid():
+                formset.save()
+                messages.success(request, 'Устройство успешно создано.')
+                return redirect('comparisons:device_detail', slug=device.slug)
     else:
         form = DeviceForm()
+        formset = DeviceSpecificationFormSet(
+            instance=Device(),
+            queryset=DeviceSpecification.objects.none()
+        )
     
-    return render(request, 'comparisons/device_form.html', {'form': form})
+    return render(request, 'comparisons/device_form.html', {
+        'form': form,
+        'formset': formset,
+        'title': 'Создание устройства'
+    })
 
 @login_required
 def device_edit(request, slug):
@@ -159,32 +161,29 @@ def device_edit(request, slug):
     
     if request.method == 'POST':
         form = DeviceForm(request.POST, request.FILES, instance=device)
-        
         if form.is_valid():
             device = form.save()
             
-            # Вот тут была ошибка - нужно брать файлы напрямую из request.FILES.getlist
-            for image in request.FILES.getlist('images'):
-                DeviceImage.objects.create(
-                    device=device,
-                    image=image,
-                    order=device.images.count()
-                )
+            formset = DeviceSpecificationFormSet(
+                request.POST,
+                instance=device
+            )
             
-            return redirect('comparisons:device_detail', slug=device.slug)
+            if formset.is_valid():
+                formset.save()
+                messages.success(request, 'Устройство успешно обновлено.')
+                return redirect('comparisons:device_detail', slug=device.slug)
         else:
-            print("Form errors:", form.errors)  # Отладка
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
         form = DeviceForm(instance=device)
-    
-    specs = Specification.objects.all().values('name', 'unit', 'is_higher_better')
+        formset = DeviceSpecificationFormSet(instance=device)
     
     return render(request, 'comparisons/device_form.html', {
         'form': form,
+        'formset': formset,
         'device': device,
-        'specifications': list(specs),
-        'title': 'Редактировать устройство',
+        'title': 'Редактирование устройства',
         'existing_images': device.images.all()
     })
 
@@ -195,17 +194,17 @@ def specification_create(request):
         return redirect('comparisons:device_list')
     
     if request.method == 'POST':
-        form = SpecificationForm(request.POST)
+        form = SpecificationFieldForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Спецификация успешно создана!')
-            return redirect('comparisons:specification_list')
+            messages.success(request, 'Характеристика успешно создана!')
+            return redirect('comparisons:device_list')
     else:
-        form = SpecificationForm()
+        form = SpecificationFieldForm()
     
     return render(request, 'comparisons/specification_form.html', {
         'form': form,
-        'title': 'Создать спецификацию'
+        'title': 'Создать характеристику'
     })
 
 def comparison_list(request):
@@ -220,7 +219,7 @@ def device_delete(request, slug):
     
     if request.method == 'POST':
         device.delete()
-        messages.success(request, 'Устройство успешно удалено')
+        messages.success(request, 'Устройство успешно удалено.')
         return redirect('comparisons:device_list')
         
     return render(request, 'comparisons/device_confirm_delete.html', {

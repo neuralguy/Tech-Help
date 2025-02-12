@@ -1,26 +1,25 @@
 from django import forms
 from .models import Article, Category, Tag, Comment
 from django_summernote.widgets import SummernoteWidget
+from tinymce.widgets import TinyMCE
 
 class ArticleForm(forms.ModelForm):
+    content = forms.CharField(
+        widget=TinyMCE(attrs={
+            'cols': 80, 
+            'rows': 30,
+            'class': 'w-full'
+        }),
+        label='Содержание'
+    )
+
     class Meta:
         model = Article
-        fields = ['title', 'category', 'content', 'image']
+        fields = ['title', 'content', 'image', 'category']
         widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900',
-                'style': 'color: black;',
-                'placeholder': 'Введите заголовок'
-            }),
-            'category': forms.Select(attrs={
-                'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900',
-                'style': 'color: black;'
-            }),
-            'content': forms.Textarea(attrs={
-                'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900',
-                'style': 'color: black;',
-                'rows': 10
-            }),
+            'title': forms.TextInput(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
+            'image': forms.FileInput(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
+            'category': forms.Select(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
         }
 
     def __init__(self, *args, **kwargs):

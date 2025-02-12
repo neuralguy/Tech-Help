@@ -1,15 +1,21 @@
 from django import forms
-from .models import Device, DeviceCategory, Specification, DeviceSpecification
+from .models import (
+    Device, 
+    DeviceCategory, 
+    DeviceSpecification, 
+    SpecificationCategory, 
+    SpecificationField
+)
 
 class DeviceForm(forms.ModelForm):
     class Meta:
         model = Device
-        fields = ['name', 'description', 'main_image', 'category']
+        fields = ['name', 'category', 'description', 'slug']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
-            'description': forms.Textarea(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900', 'rows': 4}),
-            'main_image': forms.FileInput(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
-            'category': forms.Select(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
+            'name': forms.TextInput(attrs={'class': 'form-input'}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'description': forms.Textarea(attrs={'class': 'form-textarea', 'rows': 3}),
+            'slug': forms.TextInput(attrs={'class': 'form-input'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -26,7 +32,7 @@ class DeviceForm(forms.ModelForm):
             # Добавляем новые
             specs_data = self.cleaned_data['specifications']
             for spec_data in specs_data:
-                spec, _ = Specification.objects.get_or_create(
+                spec, _ = SpecificationField.objects.get_or_create(
                     name=spec_data['name'],
                     defaults={'unit': spec_data.get('unit', '')}
                 )
@@ -41,16 +47,31 @@ class DeviceForm(forms.ModelForm):
         """Метод для обработки дополнительных изображений"""
         return self.files.getlist('images')
 
-class SpecificationForm(forms.ModelForm):
+class DeviceSpecificationForm(forms.ModelForm):
     class Meta:
-        model = Specification
-        fields = ['name', 'unit', 'is_higher_better']
+        model = DeviceSpecification
+        fields = ['field', 'value']
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Например: Процессор'}),
-            'unit': forms.TextInput(attrs={'placeholder': 'Например: ГГц'}),
+            'value': forms.TextInput(attrs={'class': 'form-input'})
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields:
-            self.fields[field].widget.attrs.update({'class': 'form-input'}) 
+class SpecificationFieldForm(forms.ModelForm):
+    class Meta:
+        model = SpecificationField
+        fields = ['name', 'category', 'description', 'unit', 'order']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-input'}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'description': forms.Textarea(attrs={'class': 'form-textarea', 'rows': 3}),
+            'unit': forms.TextInput(attrs={'class': 'form-input'}),
+            'order': forms.NumberInput(attrs={'class': 'form-input'})
+        }
+
+# Создаем FormSet для спецификаций устройства
+DeviceSpecificationFormSet = forms.inlineformset_factory(
+    Device,
+    DeviceSpecification,
+    form=DeviceSpecificationForm,
+    extra=0,
+    can_delete=True
+) 

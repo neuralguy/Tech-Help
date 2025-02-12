@@ -21,17 +21,48 @@ class DeviceCategory(models.Model):
     def __str__(self):
         return self.name
 
-class Specification(models.Model):
+class SpecificationCategory(models.Model):
+    """Категория характеристик (например, 'Дизайн', 'Экран', 'Процессор')"""
     name = models.CharField(max_length=100, verbose_name='Название')
-    unit = models.CharField(max_length=50, verbose_name='Единица измерения', blank=True)
-    is_higher_better = models.BooleanField(default=True, verbose_name='Чем больше, тем лучше')
-    
+    order = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
+
     class Meta:
-        verbose_name = 'Характеристика'
-        verbose_name_plural = 'Характеристики'
-    
+        verbose_name = 'Категория характеристик'
+        verbose_name_plural = 'Категории характеристик'
+        ordering = ['order']
+
     def __str__(self):
-        return f"{self.name} ({self.unit})" if self.unit else self.name
+        return self.name
+
+class SpecificationField(models.Model):
+    """Поле характеристики (например, 'Вес', 'Толщина', 'Высота')"""
+    category = models.ForeignKey(
+        SpecificationCategory, 
+        on_delete=models.CASCADE,
+        related_name='fields',
+        verbose_name='Категория'
+    )
+    name = models.CharField(max_length=100, verbose_name='Название')
+    description = models.TextField(
+        blank=True, 
+        verbose_name='Описание',
+        help_text='Объяснение характеристики'
+    )
+    unit = models.CharField(
+        max_length=20, 
+        blank=True, 
+        verbose_name='Единица измерения',
+        help_text='Например: мм, кг, МГц'
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
+
+    class Meta:
+        verbose_name = 'Поле характеристики'
+        verbose_name_plural = 'Поля характеристик'
+        ordering = ['category', 'order']
+
+    def __str__(self):
+        return f"{self.category.name} - {self.name}"
 
 class DeviceImage(models.Model):
     device = models.ForeignKey('Device', related_name='images', on_delete=models.CASCADE)
@@ -108,17 +139,33 @@ class Device(models.Model):
         return self.name
 
 class DeviceSpecification(models.Model):
-    device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name='specifications', verbose_name='Устройство')
-    specification = models.ForeignKey(Specification, on_delete=models.CASCADE, verbose_name='Характеристика')
-    value = models.CharField(max_length=100, verbose_name='Значение')
-    
+    """Значение характеристики для конкретного устройства"""
+    device = models.ForeignKey(
+        'Device', 
+        on_delete=models.CASCADE,
+        related_name='specifications',
+        verbose_name='Устройство'
+    )
+    field = models.ForeignKey(
+        SpecificationField,
+        on_delete=models.CASCADE,
+        verbose_name='Характеристика',
+        null=True,
+        blank=True
+    )
+    value = models.CharField(
+        max_length=255, 
+        blank=True,
+        verbose_name='Значение'
+    )
+
     class Meta:
         verbose_name = 'Характеристика устройства'
         verbose_name_plural = 'Характеристики устройства'
-        unique_together = ['device', 'specification']
-    
+        unique_together = ['device', 'field']
+
     def __str__(self):
-        return f"{self.device.name} - {self.specification.name}: {self.value}"
+        return f"{self.device.name} - {self.field.name if self.field else 'Без характеристики'}: {self.value}"
 
 class Comparison(models.Model):
     title = models.CharField(max_length=200, verbose_name='Название', blank=True)

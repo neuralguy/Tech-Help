@@ -24,8 +24,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('articles/', include('articles.urls')),
-    path('comparisons/', include('comparisons.urls')),
+    path('comparisons/', include("comparisons.urls")),
     path('accounts/', include('accounts.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
     path('summernote/', include('django_summernote.urls')),
+    path('tinymce/', include('tinymce.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -13,53 +13,73 @@ const existingSpecs = {{ specifications|safe }};
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <div class="max-w-2xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8">
-            {% if device %}Редактировать{% else %}Создать{% endif %} устройство
-        </h1>
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">{{ title }}</h1>
 
-        <form method="post" enctype="multipart/form-data" class="space-y-6 bg-slate-800 p-6 rounded-lg border border-slate-700">
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
             {% csrf_token %}
             
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Название</label>
-                {{ form.name }}
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Описание</label>
-                {{ form.description }}
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Главное изображение</label>
-                <input type="file" name="main_image" class="w-full rounded-lg border-gray-300 bg-white text-gray-900">
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Дополнительные изображения</label>
-                <input type="file" name="images" multiple class="w-full rounded-lg border-gray-300 bg-white text-gray-900">
-            </div>
-
-            {% if existing_images %}
-            <div>
-                <h3 class="text-sm font-medium text-gray-300 mb-2">Текущие изображения:</h3>
-                <div class="grid grid-cols-3 gap-4">
-                    {% for image in existing_images %}
-                    <div class="relative">
-                        <img src="{{ image.image.url }}" alt="" class="w-full h-32 object-cover rounded">
+            <!-- Основная информация об устройстве -->
+            <div class="bg-slate-800 rounded-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">Основная информация</h2>
+                
+                {% for field in form %}
+                <div class="mb-4">
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <p class="mt-1 text-sm text-gray-400">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="mt-1 text-red-500 text-sm">
+                        {{ field.errors }}
                     </div>
-                    {% endfor %}
+                    {% endif %}
                 </div>
-            </div>
-            {% endif %}
-
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Категория</label>
-                {{ form.category }}
+                {% endfor %}
             </div>
 
-            <button type="submit" class="w-full btn-primary">Сохранить</button>
+            <!-- Характеристики устройства -->
+            <div class="space-y-6">
+                {% for category, forms in formset.categories.items %}
+                <div class="bg-slate-800 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4">{{ category.name }}</h2>
+                    
+                    <div class="space-y-4">
+                        {% for form in forms %}
+                        <div class="flex items-start gap-4">
+                            <div class="flex-grow">
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    {{ form.instance.field.name }}
+                                    {% if form.instance.field.unit %}
+                                    <span class="text-gray-400">({{ form.instance.field.unit }})</span>
+                                    {% endif %}
+                                </label>
+                                {{ form.field }}
+                                {{ form.value }}
+                                {% if form.instance.field.description %}
+                                <p class="mt-1 text-sm text-gray-400">{{ form.instance.field.description }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="flex justify-end gap-4">
+                <a href="{% url 'comparisons:device_list' %}" 
+                   class="btn-secondary">
+                    Отмена
+                </a>
+                <button type="submit" class="btn-primary">
+                    {% if device %}Сохранить изменения{% else %}Создать устройство{% endif %}
+                </button>
+            </div>
         </form>
     </div>
 </div>
