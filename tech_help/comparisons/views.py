@@ -127,27 +127,26 @@ def device_create(request):
         if form.is_valid():
             device = form.save()
             
-            # Обработка характеристик
-            formset = DeviceSpecificationFormSet(
-                request.POST,
-                instance=device,
-                queryset=DeviceSpecification.objects.none()
-            )
+            # Обработка изображений
+            for image in request.FILES.getlist('images'):
+                DeviceImage.objects.create(device=device, image=image)
             
+            # Обработка спецификаций
+            formset = DeviceSpecificationFormSet(request.POST, instance=device)
             if formset.is_valid():
                 formset.save()
                 messages.success(request, 'Устройство успешно создано.')
                 return redirect('comparisons:device_detail', slug=device.slug)
     else:
         form = DeviceForm()
-        formset = DeviceSpecificationFormSet(
-            instance=Device(),
-            queryset=DeviceSpecification.objects.none()
-        )
+        formset = DeviceSpecificationFormSet()
+    
+    categories = SpecificationCategory.objects.prefetch_related('fields').all()
     
     return render(request, 'comparisons/device_form.html', {
         'form': form,
         'formset': formset,
+        'categories': categories,
         'title': 'Создание устройства'
     })
 
@@ -155,26 +154,22 @@ def device_create(request):
 def device_edit(request, slug):
     device = get_object_or_404(Device, slug=slug)
     
-    if not request.user.is_staff:
-        messages.error(request, 'У вас нет прав на редактирование устройств.')
-        return redirect('comparisons:device_detail', slug=slug)
-    
     if request.method == 'POST':
         form = DeviceForm(request.POST, request.FILES, instance=device)
+        formset = DeviceSpecificationFormSet(request.POST, instance=device)
+        
         if form.is_valid():
             device = form.save()
             
-            formset = DeviceSpecificationFormSet(
-                request.POST,
-                instance=device
-            )
+            # Обработка изображений
+            for image in request.FILES.getlist('images'):
+                DeviceImage.objects.create(device=device, image=image)
             
+            # Обработка спецификаций
             if formset.is_valid():
                 formset.save()
                 messages.success(request, 'Устройство успешно обновлено.')
                 return redirect('comparisons:device_detail', slug=device.slug)
-        else:
-            messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
         form = DeviceForm(instance=device)
         formset = DeviceSpecificationFormSet(instance=device)
@@ -184,7 +179,7 @@ def device_edit(request, slug):
         'formset': formset,
         'device': device,
         'title': 'Редактирование устройства',
-        'existing_images': device.images.all()
+        'categories': SpecificationCategory.objects.prefetch_related('fields').all()
     })
 
 @login_required

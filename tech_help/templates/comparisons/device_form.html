@@ -41,8 +41,19 @@ const existingSpecs = {{ specifications|safe }};
                 {% endfor %}
             </div>
 
+            <!-- Изображения -->
+            <div class="bg-slate-800 rounded-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">Изображения</h2>
+                <input type="file" 
+                       name="images" 
+                       multiple 
+                       accept="image/*"
+                       class="form-input w-full">
+            </div>
+
             <!-- Характеристики устройства -->
             <div class="space-y-6">
+                {{ formset.management_form }}
                 {% for category, forms in formset.categories.items %}
                 <div class="bg-slate-800 rounded-lg p-6">
                     <h2 class="text-xl font-semibold mb-4">{{ category.name }}</h2>
@@ -51,13 +62,13 @@ const existingSpecs = {{ specifications|safe }};
                         {% for form in forms %}
                         <div class="flex items-start gap-4">
                             <div class="flex-grow">
+                                {{ form.field }}
                                 <label class="block text-sm font-medium text-gray-300 mb-2">
                                     {{ form.instance.field.name }}
                                     {% if form.instance.field.unit %}
                                     <span class="text-gray-400">({{ form.instance.field.unit }})</span>
                                     {% endif %}
                                 </label>
-                                {{ form.field }}
                                 {{ form.value }}
                                 {% if form.instance.field.description %}
                                 <p class="mt-1 text-sm text-gray-400">{{ form.instance.field.description }}</p>

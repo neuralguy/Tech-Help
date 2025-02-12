@@ -6,20 +6,20 @@ from django.urls import reverse
 from unidecode import unidecode  # добавим для корректной транслитерации
 
 class DeviceCategory(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Название')
+    name = models.CharField(max_length=200, verbose_name='Название')
     slug = models.SlugField(unique=True, blank=True)
     
     class Meta:
         verbose_name = 'Категория устройств'
         verbose_name_plural = 'Категории устройств'
     
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-    
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(unidecode(self.name))
+        super().save(*args, **kwargs)
 
 class SpecificationCategory(models.Model):
     """Категория характеристик (например, 'Дизайн', 'Экран', 'Процессор')"""
@@ -72,21 +72,6 @@ class DeviceImage(models.Model):
     class Meta:
         ordering = ['order']
 
-class Category(models.Model):
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
-
-    class Meta:
-        verbose_name_plural = 'Categories'
-
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
 class Device(models.Model):
     name = models.CharField(max_length=200, verbose_name='Название')
     slug = models.SlugField(unique=True, blank=True)
@@ -98,7 +83,7 @@ class Device(models.Model):
         blank=True
     )
     category = models.ForeignKey(
-        Category, 
+        DeviceCategory, 
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -114,16 +99,12 @@ class Device(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            # Генерируем slug из названия, транслитерируя русские буквы
             self.slug = slugify(unidecode(self.name))
-            
-            # Если такой slug уже существует, добавляем число в конец
             original_slug = self.slug
             counter = 1
             while Device.objects.filter(slug=self.slug).exists():
                 self.slug = f'{original_slug}-{counter}'
                 counter += 1
-                
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
