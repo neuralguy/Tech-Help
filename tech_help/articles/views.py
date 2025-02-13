@@ -7,68 +7,33 @@ from .models import Article, Category, Tag, Comment, Rating
 from .forms import ArticleForm, CommentForm
 
 def article_list(request):
-    articles = Article.objects.all().order_by('-created_date')
+    articles = Article.objects.exclude(slug='')  # Показываем только статьи с slug
     categories = Category.objects.all()
     tags = Tag.objects.all()
-    
-    # Фильтрация по категории
-    category_slug = request.GET.get('category')
-    if category_slug:
-        articles = articles.filter(category__slug=category_slug)
-    
-    # Фильтрация по тегу
-    tag_slug = request.GET.get('tag')
-    if tag_slug:
-        articles = articles.filter(tags__slug=tag_slug)
-    
-    # Пагинация
-    paginator = Paginator(articles, 9)  # 9 статей на страницу
-    page = request.GET.get('page')
-    articles = paginator.get_page(page)
-    
-    context = {
+    return render(request, 'articles/article_list.html', {
         'articles': articles,
         'categories': categories,
         'tags': tags,
-        'current_category': category_slug,
-        'current_tag': tag_slug,
-    }
-    return render(request, 'articles/article_list.html', context)
+    })
 
 def article_detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
-    comments = article.comments.all().order_by('-created_date')
-    user_rating = None
-    
+    average_rating = article.average_rating()
+    comments = article.comments.all()
     if request.user.is_authenticated:
         user_rating = Rating.objects.filter(article=article, user=request.user).first()
     
-    # Получаем среднюю оценку используя правильное имя поля
-    average_rating = Rating.objects.filter(
-        article=article
-    ).aggregate(
-        avg_rating=Avg('value')  # используем 'value' вместо 'rating'
-    )['avg_rating']
-    
-    # Форматируем дату из правильного поля
-    formatted_date = article.created_date.strftime("%d.%m.%Y") if article.created_date else None
-    
-    # Увеличиваем счетчик просмотров
-    article.views += 1
-    article.save()
-    
-    context = {
+    return render(request, 'articles/article_detail.html', {
         'article': article,
+        'average_rating': average_rating,
         'comments': comments,
         'user_rating': user_rating,
-        'average_rating': average_rating,
-        'formatted_date': formatted_date,
-    }
-    return render(request, 'articles/article_detail.html', context)
+    })
 
 @login_required
 def add_comment(request, slug):
     article = get_object_or_404(Article, slug=slug)
+    comments = article.comments.all()
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():

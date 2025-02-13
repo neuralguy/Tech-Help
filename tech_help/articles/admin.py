@@ -23,9 +23,9 @@ class RatingInline(admin.TabularInline):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'category', 'created_date', 'views')
-    list_filter = ('category', 'tags', 'created_date', 'author')
-    search_fields = ('title', 'content')
+    list_display = ['title', 'slug', 'updated_date', 'created_date']
+    list_filter = ['created_date', 'updated_date']
+    search_fields = ['title', 'content']
     prepopulated_fields = {'slug': ('title',)}
     date_hierarchy = 'created_date'
     filter_horizontal = ('tags',)

@@ -1,0 +1,6 @@
+django
+Pillow
+django-browser-reload
+django-summernote
+unidecode
+django-tinymce

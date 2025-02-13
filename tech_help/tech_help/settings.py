@@ -45,9 +45,6 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'profiles.apps.ProfilesConfig',
     
-    # Tailwind
-    'tailwind',
-    'theme',
     'django_browser_reload',
     'django_summernote',
     'tinymce',

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.conf import settings
 from django.urls import reverse
+from unidecode import unidecode
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
@@ -41,28 +42,36 @@ class Article(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     content = models.TextField(verbose_name='Содержание')
     image = models.ImageField(upload_to='articles/', verbose_name='Изображение', blank=True)
-    created_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
-    updated_date = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Автор')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     tags = models.ManyToManyField(Tag, verbose_name='Теги')
     views = models.PositiveIntegerField(default=0, verbose_name='Просмотры')
     
     class Meta:
+        ordering = ['-created_date']
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
-        ordering = ['-created_date']
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = slugify(unidecode(self.title))
+            original_slug = self.slug
+            counter = 1
+            while Article.objects.filter(slug=self.slug).exists():
+                self.slug = f'{original_slug}-{counter}'
+                counter += 1
         super().save(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        return reverse('articles:article_detail', kwargs={'slug': self.slug})
+    
+    def average_rating(self):
+        return self.ratings.aggregate(models.Avg('value'))['value__avg'] or 0
     
     def __str__(self):
         return self.title
-
-    def get_absolute_url(self):
-        return reverse('articles:article_detail', kwargs={'slug': self.slug})
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments', verbose_name='Статья')

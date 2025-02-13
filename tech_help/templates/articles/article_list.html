@@ -16,7 +16,8 @@
 <div class="container mx-auto px-4 py-8">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {% for article in articles %}
-        <a href="{% url 'articles:article_detail' article.slug %}" 
+        {% if article.slug %}  {# Проверяем наличие slug #}
+        <a href="/articles/{{ article.slug }}/" 
            class="block group">
             <div class="card bg-slate-700/50 hover:bg-slate-700 transition-all duration-200 rounded-lg overflow-hidden hover:scale-105">
                 {% if article.image %}
@@ -42,6 +43,7 @@
                 </div>
             </div>
         </a>
+        {% endif %}
         {% empty %}
         <div class="col-span-full text-center py-8">
             <p class="text-gray-400">Статьи не найдены</p>
@@ -85,49 +87,6 @@
 
 <!-- Список статей -->
 <div class="col-span-12 md:col-span-9">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for article in articles %}
-        <article class="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden transition-transform hover:scale-105">
-            {% if article.image %}
-            <img src="{{ article.image.url }}" alt="{{ article.title }}" 
-                 class="w-full h-48 object-cover">
-            {% endif %}
-            <div class="p-4">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="text-blue-400 text-sm">{{ article.category.name }}</span>
-                    <span class="text-gray-500">•</span>
-                    <span class="text-gray-400 text-sm">{{ article.created_date|date:"d.m.Y" }}</span>
-                </div>
-                <h2 class="text-xl font-semibold mb-2">
-                    <a href="{% url 'articles:article_detail' article.slug %}" 
-                       class="text-white hover:text-blue-400">
-                        {{ article.title }}
-                    </a>
-                </h2>
-                <div class="flex items-center justify-between mt-4">
-                    <div class="flex items-center gap-2">
-                        <span class="text-gray-400">
-                            <i class="fas fa-eye"></i> {{ article.views }}
-                        </span>
-                        <span class="text-gray-400">
-                            <i class="fas fa-comment"></i> {{ article.comments.count }}
-                        </span>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="text-yellow-400">★</span>
-                        <span class="text-gray-400 ml-1">
-                            {{ article.ratings.all|length|default:"0" }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </article>
-        {% empty %}
-        <div class="col-span-full text-center py-8">
-            <p class="text-gray-400">Статьи не найдены</p>
-        </div>
-        {% endfor %}
-    </div>
 
     <!-- Пагинация -->
     {% if articles.has_other_pages %}
