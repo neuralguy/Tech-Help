@@ -26,18 +26,26 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Изображение</label>
-                {{ form.image }}
-                {% if form.image.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.image.errors.0 }}</p>
-                {% endif %}
-            </div>
-
-            <div>
                 <label class="block text-sm font-medium text-gray-300 mb-2">Категория</label>
                 {{ form.category }}
                 {% if form.category.errors %}
                 <p class="text-red-500 text-sm mt-1">{{ form.category.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Теги</label>
+                {{ form.tags }}
+                {% if form.tags.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.tags.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Изображение</label>
+                {{ form.image }}
+                {% if form.image.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.image.errors.0 }}</p>
                 {% endif %}
             </div>
 

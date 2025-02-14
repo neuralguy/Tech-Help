@@ -6,29 +6,51 @@ from django.db.models import Avg
 from .models import Article, Category, Tag, Comment, Rating
 from .forms import ArticleForm, CommentForm
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render
+
 def article_list(request):
-    articles = Article.objects.exclude(slug='')  # Показываем только статьи с slug
+    articles_list = Article.objects.all()
+    # Фильтрация по категории
+    category_slug = request.GET.get('category')
+    if category_slug:
+        articles_list = articles_list.filter(category__slug=category_slug)
     categories = Category.objects.all()
-    tags = Tag.objects.all()
+
+    items_per_page = 12
+    paginator = Paginator(articles_list, items_per_page)
+
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        # Если 'page' не целое число, показываем первую страницу
+        articles = paginator.page(1)
+    except EmptyPage:
+        # Если 'page' больше максимального, показываем последнюю страницу
+        articles = paginator.page(paginator.num_pages)
+
     return render(request, 'articles/article_list.html', {
         'articles': articles,
-        'categories': categories,
-        'tags': tags,
+        'categories': categories
     })
+
 
 def article_detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
     average_rating = article.average_rating()
     comments = article.comments.all()
-    if request.user.is_authenticated:
-        user_rating = Rating.objects.filter(article=article, user=request.user).first()
-    
-    return render(request, 'articles/article_detail.html', {
+
+    context = {
         'article': article,
         'average_rating': average_rating,
         'comments': comments,
-        'user_rating': user_rating,
-    })
+    }
+    if request.user.is_authenticated:
+        user_rating = Rating.objects.filter(article=article, user=request.user).first()
+        context['user_rating'] = user_rating
+    
+    return render(request, 'articles/article_detail.html', context)
 
 @login_required
 def add_comment(request, slug):

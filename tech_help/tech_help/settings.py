@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     
     'django_browser_reload',
-    'django_summernote',
-    'tinymce',
+    'ckeditor',
+    'ckeditor_uploader', 
 ]
 
 MIDDLEWARE = [
@@ -145,40 +145,30 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'users.User'
 
-# Настройки Tailwind CSS
-TAILWIND_APP_NAME = 'theme'
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+# Настройки CKEditor
+CKEDITOR_UPLOAD_PATH = "uploads/"  # Путь для загрузки файлов (если используете ckeditor_uploader)
+CKEDITOR_IMAGE_BACKEND = "pillow"  # Для обработки изображений
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'  # Подключение jQuery
 
-# Настройки Summernote
-SUMMERNOTE_CONFIG = {
-    'iframe': True,
-    'summernote': {
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',  # Полный набор инструментов
+        'height': 500,
         'width': '100%',
-        'height': '480',
-        'toolbar': [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-        ],
-    }
-}
-
-TINYMCE_DEFAULT_CONFIG = {
-    'height': '500px',
-    'width': '100%',
-    'menubar': True,
-    'plugins': 'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount spellchecker',
-    'toolbar': 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-    'content_css': [
-        '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-        '//www.tiny.cloud/css/codepen.min.css'
-    ],
-    'skin': 'oxide-dark',
-    'content_css': 'dark',
+        'extraPlugins': ','.join([
+            'uploadimage',  # Плагин для загрузки изображений
+            'div',
+            'autolink',
+            'embed',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath'
+        ]),
+    },
 }

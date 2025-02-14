@@ -4,6 +4,8 @@ from django.utils.text import slugify
 from django.conf import settings
 from django.urls import reverse
 from unidecode import unidecode
+from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
@@ -40,11 +42,11 @@ class Tag(models.Model):
 class Article(models.Model):
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     slug = models.SlugField(unique=True, blank=True)
-    content = models.TextField(verbose_name='Содержание')
+    content = RichTextUploadingField()
     image = models.ImageField(upload_to='articles/', verbose_name='Изображение', blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Автор')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Автор', null=False, blank=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     tags = models.ManyToManyField(Tag, verbose_name='Теги')
     views = models.PositiveIntegerField(default=0, verbose_name='Просмотры')

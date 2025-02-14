@@ -14,80 +14,80 @@
 </div>
 
 <div class="container mx-auto px-4 py-8">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {% for article in articles %}
-        {% if article.slug %}  {# Проверяем наличие slug #}
-        <a href="/articles/{{ article.slug }}/" 
-           class="block group">
-            <div class="card bg-slate-700/50 hover:bg-slate-700 transition-all duration-200 rounded-lg overflow-hidden hover:scale-105">
-                {% if article.image %}
-                <div class="aspect-video w-full overflow-hidden">
-                    <img src="{{ article.image.url }}" 
-                         alt="{{ article.title }}"
-                         class="w-full h-full object-cover">
-                </div>
-                {% endif %}
-                <div class="p-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        {% if article.category %}
-                        <span class="text-blue-400">{{ article.category.name }}</span>
-                        {% endif %}
-                        <span class="text-gray-400">{{ article.created_at|date:"d.m.Y" }}</span>
-                    </div>
-                    <h2 class="text-xl font-semibold mb-2 text-white group-hover:text-blue-400 transition-colors">
-                        {{ article.title }}
-                    </h2>
-                    <div class="mt-4 text-gray-300 line-clamp-2">
-                        {{ article.content|striptags|truncatewords:20 }}
-                    </div>
-                </div>
-            </div>
-        </a>
-        {% endif %}
-        {% empty %}
-        <div class="col-span-full text-center py-8">
-            <p class="text-gray-400">Статьи не найдены</p>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-
-<!-- Боковая панель с фильтрами -->
+    <div class="grid grid-cols-12 gap-6">
+        <!-- Боковая панель с фильтрами -->
 <div class="col-span-12 md:col-span-3">
-    <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 sticky top-4">
+    <div class="p-6 rounded-lg border border-slate-700 sticky top-4">
         <h2 class="text-xl font-semibold text-blue-400 mb-4">Категории</h2>
-        <ul class="space-y-2">
-            <li>
-                <a href="{% url 'articles:article_list' %}" 
-                   class="text-gray-300 hover:text-white {% if not current_category %}text-blue-400{% endif %}">
-                    Все категории
-                </a>
-            </li>
-            {% for category in categories %}
-            <li>
-                <a href="?category={{ category.slug }}" 
-                   class="text-gray-300 hover:text-white {% if current_category == category.slug %}text-blue-400{% endif %}">
-                    {{ category.name }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
 
-        <h2 class="text-xl font-semibold text-blue-400 mt-8 mb-4">Теги</h2>
-        <div class="flex flex-wrap gap-2">
-            {% for tag in tags %}
-            <a href="?tag={{ tag.slug }}" 
-               class="px-3 py-1 bg-slate-700 rounded-full text-sm {% if current_tag == tag.slug %}bg-blue-600{% endif %}">
-                {{ tag.name }}
+        <!-- Контейнер для кнопок -->
+        <div class="flex flex-wrap gap-2 ">
+            <a href="{% url 'articles:article_list' %}"
+               class="inline-block rounded-full px-4 py-2 text-sm font-medium bg-blue-500/20 text-blue-300 hover:bg-blue-500/40 hover:text-white transition-colors duration-200 flex items-center justify-center text-center break-words {% if not request.GET.category %}!bg-blue-600/70 !text-white{% endif %}"
+               style="min-width: 0;"> <!-- Добавлено min-width -->
+                Все категории
+            </a>
+            {% for category in categories %}
+            <a href="?category={{ category.slug }}"
+               class="inline-block rounded-full px-4 max-w-xs-30 py-2 text-sm font-medium bg-blue-500/20 text-blue-300 hover:bg-blue-500/40 hover:text-white transition-colors duration-200 flex items-center justify-center text-center break-words {% if request.GET.category == category.slug %}!bg-blue-600/70 !text-white{% endif %}"
+               style="min-width: 0;"> <!-- Добавлено min-width -->
+                {{ category.name }}
             </a>
             {% endfor %}
         </div>
+
     </div>
 </div>
 
-<!-- Список статей -->
-<div class="col-span-12 md:col-span-9">
 
+
+        <!-- Контент со статьями -->
+        <div class="col-span-12 md:col-span-9">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {% for article in articles %}
+                {% if article.slug %}
+                <a href="{% url 'articles:article_detail' slug=article.slug %}"
+                   class="block group">
+                    <div class="card bg-slate-700/50 hover:bg-slate-700 transition-all duration-200 rounded-lg overflow-hidden hover:scale-105 flex flex-col">
+                        <div class="aspect-video w-full overflow-hidden">
+                            {% if article.image %}
+                            <img src="{{ article.image.url }}"
+                                 alt="{{ article.title }}"
+                                 class="w-full h-full object-cover">
+                            {% else %}
+                            <img src="../../../media/articles/default-images/{{ article.category.name }}.png" 
+                                alt="{{ article.title }}" 
+                                class="w-full h-full object-cover">
+                            {% endif %}
+                        </div>
+                        <div class="p-4 flex-grow">
+                            <div class="flex items-center gap-2 mb-2">
+                                {% if article.category %}
+                                <span class="text-blue-400">{{ article.category.name }}</span>
+                                {% endif %}
+                                <span class="text-gray-400">{{ article.created_at|date:"d.m.Y" }}</span>
+                            </div>
+                            <h2 class="text-xl font-semibold mb-2 text-white group-hover:text-blue-400 transition-colors">
+                                {{ article.title }}
+                            </h2>
+                            <div class="mt-4 text-gray-300 line-clamp-2">
+                                {{ article.content|striptags|truncatewords:20 }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endif %}
+                {% empty %}
+                <div class="col-span-full text-center py-8">
+                    <p class="text-gray-400">Статьи не найдены</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-span-12 md:col-span-9">
     <!-- Пагинация -->
     {% if articles.has_other_pages %}
     <div class="flex justify-center mt-8">
