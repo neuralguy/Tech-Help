@@ -4,7 +4,6 @@ from django.utils.text import slugify
 from django.conf import settings
 from django.urls import reverse
 from unidecode import unidecode
-from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 
 class Category(models.Model):

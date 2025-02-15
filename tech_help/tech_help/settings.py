@@ -152,23 +152,55 @@ CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.j
 
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': 'full',  # Полный набор инструментов
+        'toolbar': 'Custom',  # Название кастомного тулбара
+        'toolbar_Custom': [
+            # Основные инструменты
+            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
+            '/',
+            # Форматы текста
+            ['Format', 'Styles', 'Font', 'FontSize'],
+            '/',
+            # Списки
+            ['NumberedList', 'BulletedList', 'Indent', 'Outdent'],
+            '/',
+            # Ссылки и изображения
+            ['Link', 'Unlink', 'Image', 'UploadImage'],
+            '/',
+            # Таблицы
+            ['Table', 'HorizontalRule', 'Smiley', 'SpecialChar'],
+            '/',
+            # Медиа
+            ['Embed', 'Iframe', 'Youtube'],
+            '/',
+            # История изменений
+            ['Undo', 'Redo'],
+            '/',
+            # Очистка и выравнивание
+            ['RemoveFormat', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            '/',
+            # Цвета
+            ['TextColor', 'BGColor'],
+            '/',
+            # Поиск и замена
+            ['Find', 'Replace'],
+            '/',
+            # Код и HTML
+            ['Source', 'CodeSnippet', 'Templates'],
+            '/',
+            # Дополнительные плагины
+            ['Maximize', 'ShowBlocks', 'Preview', 'Save', 'NewPage', 'PageBreak', 'Print'],
+            '/',
+            # Другие инструменты
+            ['About', 'Anchor', 'Blockquote', 'Div', 'CreateDiv', 'Language', 'BidiLtr', 'BidiRtl']
+        ],
         'height': 500,
         'width': '100%',
         'extraPlugins': ','.join([
-            'uploadimage',  # Плагин для загрузки изображений
+            'uploadimage',
             'div',
-            'autolink',
             'embed',
-            'autoembed',
-            'embedsemantic',
             'autogrow',
-            'widget',
-            'lineutils',
-            'clipboard',
-            'dialog',
-            'dialogui',
-            'elementspath'
+            'codesnippet'
         ]),
     },
 }
