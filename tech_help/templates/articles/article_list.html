@@ -40,7 +40,6 @@
 </div>
 
 
-
         <!-- Контент со статьями -->
         <div class="col-span-12 md:col-span-9">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -68,10 +67,10 @@
                                 <span class="text-gray-400">{{ article.created_at|date:"d.m.Y" }}</span>
                             </div>
                             <h2 class="text-xl font-semibold mb-2 text-white group-hover:text-blue-400 transition-colors">
-                                {{ article.title }}
+                                {{ article.title|striptags|truncatewords:10 }}
                             </h2>
                             <div class="mt-4 text-gray-300 line-clamp-2">
-                                {{ article.content|striptags|truncatewords:20 }}
+                                {{ article.content|striptags|truncatewords:10 }}
                             </div>
                         </div>
                     </div>

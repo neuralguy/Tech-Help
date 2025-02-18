@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'comparisons.apps.ComparisonsConfig',
     'users.apps.UsersConfig',
     'profiles.apps.ProfilesConfig',
+    'devices.apps.DevicesConfig',
     
     'django_browser_reload',
     'ckeditor',

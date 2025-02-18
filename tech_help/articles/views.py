@@ -2,8 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Avg
-from .models import Article, Category, Tag, Comment, Rating
+from .models import Article, Category, Rating
 from .forms import ArticleForm, CommentForm
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -90,7 +89,6 @@ def article_create(request):
             article = form.save(commit=False)
             article.author = request.user
             article.save()
-            form.save_m2m()  # Сохраняем теги
             messages.success(request, 'Статья успешно создана!')
             return redirect('articles:article_detail', slug=article.slug)
     else:

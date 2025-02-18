@@ -22,10 +22,11 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('articles/', include('articles.urls')),
     path('comparisons/', include("comparisons.urls")),
+    path('devices/', include("devices.urls")),
     path('accounts/', include('accounts.urls')),
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path("__reload__/", include("django_browser_reload.urls")),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Article, Category, Tag, Comment
+from .models import Article, Comment
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 class ArticleForm(forms.ModelForm):
@@ -14,10 +14,9 @@ class ArticleForm(forms.ModelForm):
 
     class Meta:
         model = Article
-        fields = ['title', 'tags', 'content', 'image', 'category']
+        fields = ['title', 'content', 'image', 'category']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
-            'tags': forms.SelectMultiple(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
             'image': forms.FileInput(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
             'category': forms.Select(attrs={'class': 'w-full rounded-lg border-gray-300 bg-white text-gray-900'}),
         }
