@@ -1,0 +1,460 @@
+/*
+Список эффектов:
+•  fade-in-up: Появление элемента с плавным поднятием снизу вверх.
+•  fade-in-down: Появление элемента с плавным опусканием сверху вниз.
+•  fade-in-left: Появление элемента с плавным сдвигом слева направо.
+•  fade-in-right: Появление элемента с плавным сдвигом справа налево.
+•  scale-up: Увеличение размера элемента от меньшего к нормальному.
+•  scale-down: Уменьшение размера элемента от большего к нормальному.
+•  flip-horizontal: Вращение элемента по горизонтали на 360 градусов.
+•  rotate: Непрерывное вращение элемента по кругу.
+•  pulse: Пульсирующее изменение размера элемента.
+•  wave: Горизонтальное перемещение элемента влево и вправо.
+•  blink: Мигание элемента (появление и исчезновение).
+•  zoom-in: Плавное увеличение размера элемента, как при приближении.
+•  wipe: Эффект "вытирания", когда элемент постепенно появляется слева направо.
+•  expand: Анимация расширения элемента по горизонтали от 0 до полной ширины.
+•  wave-grow: Увеличение элемента по горизонтали (как волна).
+•  cube-rotate: Непрерывное вращение элемента в трехмерном пространстве, как куб.
+•  highlight: При наведении курсора появляется тень от текста.
+•  typing-animation: Эффект печатающегося текста.
+*/
+
+/* fade-in-up */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+.fade-in-up-hover:hover {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+.fade-in-up-inf {
+    animation: fade-in-up 0.5s ease-out infinite;
+}
+/* fade-in-down */
+@keyframes fade-in-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-down {
+  animation: fade-in-down 0.5s ease-out forwards;
+}
+
+.fade-in-down-hover:hover {
+  animation: fade-in-down 0.5s ease-out forwards;
+}
+
+.fade-in-down-inf {
+    animation: fade-in-down 0.5s ease-out infinite;
+}
+
+
+/* fade-in-left */
+@keyframes fade-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in-left {
+  animation: fade-in-left 0.5s ease-out forwards;
+}
+
+.fade-in-left-hover:hover {
+  animation: fade-in-left 0.5s ease-out forwards;
+}
+
+.fade-in-left-inf {
+    animation: fade-in-left 0.5s ease-out infinite;
+}
+
+
+/* fade-in-right */
+@keyframes fade-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in-right {
+  animation: fade-in-right 0.5s ease-out forwards;
+}
+
+.fade-in-right-hover:hover {
+  animation: fade-in-right 0.5s ease-out forwards;
+}
+
+.fade-in-right-inf {
+    animation: fade-in-right 0.5s ease-out infinite;
+}
+
+/* scale-up */
+@keyframes scale-up {
+  0% {
+    transform: scale(0.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.scale-up {
+  animation: scale-up 0.5s ease-out forwards;
+}
+
+.scale-up-hover:hover {
+  animation: scale-up 0.5s ease-out forwards;
+}
+
+.scale-up-inf {
+    animation: scale-up 0.5s ease-out infinite;
+}
+
+/* scale-down */
+@keyframes scale-down {
+  0% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.scale-down {
+  animation: scale-down 0.5s ease-out forwards;
+}
+
+.scale-down-hover:hover {
+  animation: scale-down 0.5s ease-out forwards;
+}
+
+.scale-down-inf {
+    animation: scale-down 0.5s ease-out infinite;
+}
+
+/* flip-horizontal */
+@keyframes flip-horizontal {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(180deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.flip-horizontal {
+  animation: flip-horizontal 1s linear forwards;
+}
+
+.flip-horizontal-hover:hover {
+  animation: flip-horizontal 1s linear forwards;
+}
+
+.flip-horizontal-inf {
+  animation: flip-horizontal 3s linear infinite;
+}
+
+
+/* rotate */
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate {
+  animation: rotate 2s linear forwards;
+}
+
+.rotate-hover:hover {
+  animation: rotate 2s linear forwards;
+}
+
+.rotate-inf {
+  animation: rotate 2s linear infinite;
+}
+
+
+/* pulse */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse-an {
+  animation: pulse 1s ease-in-out forwards;
+}
+
+.pulse-hover:hover {
+  animation: pulse 1s ease-in-out forwards;
+}
+
+
+.pulse-inf {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+/* wave */
+@keyframes wave {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(20px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.wave {
+  animation: wave 2s ease-in-out forwards;
+}
+
+.wave-hover:hover {
+  animation: wave 2s ease-in-out forwards;
+}
+
+.wave-inf {
+  animation: wave 2s ease-in-out infinite;
+}
+
+/* blink */
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.blink {
+  animation: blink 1s ease-in-out forwards;
+}
+
+.blink-hover:hover {
+  animation: blink 1s ease-in-out forwards;
+}
+
+.blink-inf {
+  animation: blink 1s ease-in-out infinite;
+}
+
+/* zoom-in */
+@keyframes zoom-in {
+  0% {
+    transform: scale(0.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.zoom-in {
+  animation: zoom-in 0.5s ease-out forwards;
+}
+
+.zoom-in-hover:hover {
+  animation: zoom-in 0.5s ease-out forwards;
+}
+
+.zoom-in-inf {
+  animation: zoom-in 0.5s ease-out infinite;
+}
+
+
+/* wipe */
+@keyframes wipe {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.wipe {
+  animation: wipe 0.5s ease-out forwards;
+}
+
+.wipe-hover:hover {
+  animation: wipe 0.5s ease-out forwards;
+}
+
+.wipe-inf {
+  animation: wipe 0.5s ease-out infinite;
+}
+
+/* expand */
+@keyframes expand {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.expand {
+  animation: expand 1s ease-out forwards;
+}
+
+.expand-hover:hover {
+  animation: expand 1s ease-out forwards;
+}
+
+.expand-inf {
+  animation: expand 1s ease-out infinite;
+}
+
+/* wave-grow */
+@keyframes wave-grow {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.wave-grow {
+  animation: wave-grow 0.5s ease-out forwards;
+}
+
+.wave-grow-hover:hover {
+  animation: wave-grow 0.5s ease-out forwards;
+}
+
+.wave-grow-inf {
+  animation: wave-grow 0.5s ease-out infinite;
+}
+
+/* cube-rotate */
+@keyframes cube-rotate {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+
+.cube-rotate {
+  animation: cube-rotate 5s linear forwards;
+}
+
+.cube-rotate-hover:hover {
+  animation: cube-rotate 5s linear forwards;
+}
+
+.cube-rotate-inf {
+  animation: cube-rotate 5s linear infinite;
+}
+
+/* highlight */
+.highlight {
+  transition: text-shadow 0.3s ease-in-out;
+}
+
+.highlight:hover { /* Теперь hover эффект применяется к базовому классу */
+  text-shadow: 0 0 5px #007bff, 0px 0px 10px #007bff; /* Цвет и размытие тени */
+}
+
+.highlight-inf { /* Класс для постоянного highlight (не рекомендуется, но для полноты картины) */
+  text-shadow: 0 0 5px #007bff, 0px 0px 10px #007bff;
+}
+
+
+
+/* typing-animation */
+.typing-animation {
+  display: inline-block;
+  overflow: hidden;
+  border-right: .15em solid gray; /* Курсор */
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: .15em;
+  animation:
+    typing 4s steps(40, end) forwards,
+    blink-caret .75s step-end infinite;
+}
+
+.typing-animation-hover:hover{
+  display: inline-block;
+  overflow: hidden;
+  border-right: .15em solid gray; /* Курсор */
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: .15em;
+  animation:
+    typing 4s steps(40, end) forwards,
+    blink-caret .75s step-end infinite;
+}
+
+.typing-animation-inf {
+  display: inline-block;
+  overflow: hidden;
+  border-right: .15em solid gray; /* Курсор */
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: .15em;
+  animation:
+    typing 4s steps(40, end) infinite,
+    blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+      from { width: 0 }
+      to { width: 60% }
+    }
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: gray; }
+}

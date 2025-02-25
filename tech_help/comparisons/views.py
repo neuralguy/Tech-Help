@@ -9,7 +9,7 @@ from django.views.decorators.cache import never_cache
 def comparison_create(request):
     if request.method == 'POST':
         device_ids = request.POST.getlist('devices')
-        if len(device_ids) >= 2:
+        if len(device_ids) == 2:
             comparison = Comparison.objects.create(
                 created_by=request.user,
                 title="Сравнение устройств"

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Устройства - Tech Help{% endblock %}
+{% block title %}Tech Help - Устройства{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
@@ -9,10 +9,10 @@
         <h1 class="text-3xl font-bold text-white">Устройства</h1>
         {% if user.is_staff %}
         <div class="flex gap-4">
-            <a href="{% url 'devices:device_create' %}" class="btn-primary">
+            <a href="{% url 'devices:device_create' %}" class="p-4 btn-primary bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
                 <i class="fas fa-plus mr-2"></i>Добавить устройство
             </a>
-            <a href="{% url 'devices:specification_create' %}" class="btn-secondary">
+            <a href="{% url 'devices:specification_create' %}" class="p-4 btn-secondary bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
                 <i class="fas fa-cog mr-2"></i>Добавить характеристику
             </a>
         </div>

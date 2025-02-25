@@ -26,7 +26,8 @@ urlpatterns = [
     path('comparisons/', include("comparisons.urls")),
     path('devices/', include("devices.urls")),
     path('accounts/', include('accounts.urls')),
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path("__reload__/", include("django_browser_reload.urls")),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

@@ -4,12 +4,12 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 class ArticleForm(forms.ModelForm):
     content = forms.CharField(
-        widget=CKEditorUploadingWidget(attrs={
-            'cols': 80, 
-            'rows': 30,
-            'class': 'w-full'
-        }),
-        label='Содержание'
+    widget=CKEditorUploadingWidget(attrs={
+        'cols': 80, 
+        'rows': 30,
+        'class': 'w-full'
+    }),
+    label='Содержание'
     )
 
     class Meta:

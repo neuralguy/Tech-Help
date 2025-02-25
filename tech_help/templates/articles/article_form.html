@@ -3,7 +3,7 @@
 
 {% block title %}{{ title }} - Tech Help{% endblock %}
 
-{% block extra_head %}
+{% block head %}
 {{ form.media }}
 {% endblock %}
 
@@ -49,7 +49,7 @@
                 {% endif %}
             </div>
 
-            <button type="submit" class="w-full btn-primary">
+            <button type="submit" class="highlight w-full btn-primary text-lg bg-black/30 py-4">
                 {% if article %}Сохранить изменения{% else %}Создать статью{% endif %}
             </button>
         </form>

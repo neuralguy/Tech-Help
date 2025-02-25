@@ -73,19 +73,23 @@
     </div>
 
     <!-- Призыв к действию -->
-    <div class="mt-16 bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
-        <h2 class="text-3xl font-bold text-blue-400 mb-4">Начните прямо сейчас!</h2>
-        <p class="text-xl text-gray-400 mb-8">
-            Присоединяйтесь к нашему сообществу и откройте для себя мир технологий
-        </p>
-        <div class="flex justify-center space-x-4">
-            <a href="{% url 'accounts:register' %}" class="btn-primary">
-                Зарегистрироваться
-            </a>
-            <a href="{% url 'accounts:login' %}" class="btn-secondary">
-                Войти
-            </a>
+    {% if not user.is_authenticated %}
+        <div class="mt-16 bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+            <h2 class="text-3xl font-bold text-blue-400 mb-4">Начните прямо сейчас!</h2>
+            <p class="text-xl text-gray-400 mb-8">
+                Присоединяйтесь к нашему сообществу и откройте для себя мир технологий
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="{% url 'accounts:register' %}" class="btn-primary">
+                    Зарегистрироваться
+                </a>
+                <a href="{% url 'accounts:login' %}" class="btn-secondary">
+                    Войти
+                </a>
+            </div>
         </div>
-    </div>
+    {% endif %}
+
+
 </div>
 {% endblock %} 

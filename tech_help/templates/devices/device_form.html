@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ title }} - Tech Help{% endblock %}
+{% block title %}Tech Help - Устройство{% endblock %}
 
-{% block extra_head %}
+{% block head %}
 <script>
 // Преобразуем спецификации из Python в JavaScript
 const existingSpecs = {{ specifications|safe }};
