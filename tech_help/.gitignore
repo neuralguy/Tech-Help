@@ -1,0 +1,104 @@
+# Игнорирование файлов окружения
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Игнорирование Python кэша и виртуального окружения
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+ENV/
+
+# Игнорирование статических файлов и медиа
+/staticfiles/
+/media/
+/static/
+
+# Игнорирование базы данных SQLite
+*.sqlite3
+*.db
+
+# Игнорирование IDE и редакторов
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Игнорирование логов и временных файлов
+*.log
+*.pot
+*.pyc
+*.pid
+*.DS_Store
+*.cache
+*.coverage
+*.mo
+*.sql
+*.sql.gz
+*.bak
+*.swp
+*.swo
+*.tmp
+*.temp
+*.pid
+*.pid.lock
+*.pid.*
+
+# Игнорирование зависимостей
+node_modules/
+bower_components/
+.pnp
+.pnp.js
+
+# Игнорирование сборок и пакетов
+/dist/
+/build/
+/out/
+/target/
+*.egg-info/
+*.egg
+*.manifest
+*.spec
+*.dist-info
+*.pyd
+*.so
+*.dll
+*.exe
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Игнорирование миграций (если не хотим их коммитить)
+/migrations/
+!*/migrations/
+!*/migrations/__init__.py
+
+# Игнорирование тестовых данных
+/test_data/
+/test_results/
+/coverage/
+
+# Игнорирование конфигураций
+/settings/local.py
+/settings/dev.py
+/settings/prod.py
+/settings/test.py
+
+# Игнорирование других специфичных файлов
+/ckeditor/
+/ckeditor_uploader/
+/ckeditor_config.js
+/ckeditor_build_config.js 

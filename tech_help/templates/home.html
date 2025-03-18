@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Tech Help - Главная{% endblock %}
+
+
+{% block content %}
+<div class="text-center fade-in">
+    <h1 class="text-4xl font-bold text-blue-400 mb-4">
+        Добро пожаловать в Tech Help
+    </h1>
+    <p class="text-xl text-gray-400 mb-8">
+        Ваш путеводитель в мире современных технологий
+    </p>
+    
+    <!-- Карточки с возможностями -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 card-hover">
+            <h2 class="text-xl font-semibold text-blue-400 mb-4">Статьи</h2>
+            <p class="text-gray-400 mb-4">
+                Читайте подробные обзоры и аналитику последних технологических новинок
+            </p>
+            <a href="{% url 'articles:article_list' %}" class="text-blue-400 hover:text-blue-300 transition-colors duration-200 mt-4 inline-block">
+                Читать статьи
+            </a>
+        </div>
+        
+        <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 card-hover">
+            <h2 class="text-xl font-semibold text-blue-400 mb-4">Устройства</h2>
+            <p class="text-gray-400 mb-4">
+                Изучайте характеристики и отзывы о современных устройствах
+            </p>
+            <a href="{% url 'devices:device_list' %}" class="text-blue-400 hover:text-blue-300 transition-colors duration-200 mt-4 inline-block">
+                Смотреть устройства
+            </a>
+        </div>
+        
+        <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 card-hover">
+            <h2 class="text-xl font-semibold text-blue-400 mb-4">Сравнения</h2>
+            <p class="text-gray-400 mb-4">
+                Сравнивайте характеристики устройств и делайте осознанный выбор
+            </p>
+            <a href="{% url 'comparisons:comparison_list' %}" class="text-blue-400 hover:text-blue-300 transition-colors duration-200 mt-4 inline-block">
+                Сравнить устройства
+            </a>
+        </div>
+    </div>
+
+    <!-- Новые разделы -->
+    <div class="mt-16">
+        <h2 class="text-3xl font-bold text-blue-400 mb-8">Почему выбирают нас?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 card-hover">
+                <i class="fas fa-chart-line text-4xl text-blue-400 mb-4"></i>
+                <h3 class="text-xl font-semibold text-blue-400 mb-2">Актуальная информация</h3>
+                <p class="text-gray-400">Всегда свежие данные и последние новости</p>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 card-hover">
+                <i class="fas fa-users text-4xl text-blue-400 mb-4"></i>
+                <h3 class="text-xl font-semibold text-blue-400 mb-2">Экспертное сообщество</h3>
+                <p class="text-gray-400">Общайтесь с профессионалами и энтузиастами</p>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 card-hover">
+                <i class="fas fa-tools text-4xl text-blue-400 mb-4"></i>
+                <h3 class="text-xl font-semibold text-blue-400 mb-2">Удобные инструменты</h3>
+                <p class="text-gray-400">Сравнение, анализ и подбор устройств</p>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-lg border border-slate-700 card-hover">
+                <i class="fas fa-mobile-alt text-4xl text-blue-400 mb-4"></i>
+                <h3 class="text-xl font-semibold text-blue-400 mb-2">Широкий выбор</h3>
+                <p class="text-gray-400">Тысячи устройств в одной базе данных</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Призыв к действию -->
+    {% if not user.is_authenticated %}
+        <div class="mt-16 bg-slate-800 p-8 rounded-lg border border-slate-700 card-hover">
+            <h2 class="text-3xl font-bold text-blue-400 mb-4">Начните прямо сейчас!</h2>
+            <p class="text-xl text-gray-400 mb-8">
+                Присоединяйтесь к нашему сообществу и откройте для себя мир технологий
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="{% url 'accounts:register' %}" class="btn-primary">
+                    Зарегистрироваться
+                </a>
+                <a href="{% url 'accounts:login' %}" class="btn-secondary">
+                    Войти
+                </a>
+            </div>
+        </div>
+    {% endif %}
+
+
+</div>
+{% endblock %} 

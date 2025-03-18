@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tech Help{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animations.css' %}" rel="stylesheet">
+    {% block head %}{% endblock %}
+    
+</head>
+<body class="flex flex-col min-h-screen bg-slate-900">
+    <nav class="bg-slate-800 border-b border-slate-700">
+        <div class="px-8 mx-auto px-4">
+            <div class="flex justify-between">
+                <!-- Логотип слева -->  
+                <a href="/" class="highlight flex items-center text-xl font-bold text-blue-400">
+                    Tech Help
+                </a>
+
+                <!-- Центральное меню -->
+                <div class="flex-1 flex justify-center items-center">
+                    <nav class="flex space-x-16">
+                        <a href="{% url 'articles:article_list' %}" class="nav-link p-4">
+                            <i class="fas fa-newspaper mr-2"></i>Статьи
+                        </a>
+                        <a href="{% url 'devices:device_list' %}" class="nav-link p-4">
+                            <i class="fas fa-mobile-alt mr-2"></i>Устройства
+                        </a>
+                        <a href="{% url 'comparisons:comparison_list' %}" class="nav-link p-4">
+                            <i class="fas fa-balance-scale mr-2"></i>Сравнения
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Правая часть -->
+                <div class="flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff %}
+                        <a href="{% url 'admin:index' %}" class="nav-link">
+                            <i class="fas fa-cog mr-2"></i>Админ-панель
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'accounts:profile' %}" class="nav-link">
+                            <i class="fas fa-user mr-2"></i>{{ user.username }}
+                        </a>
+                        <a href="{% url 'accounts:logout' %}" class="nav-link">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Выйти
+                        </a>
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" class="nav-link">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Войти
+                        </a>
+                        <a href="{% url 'accounts:register' %}" class="btn-primary">
+                            Регистрация
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% if messages %}
+            <!-- ... messages остаются без изменений ... -->
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Футер -->
+    <footer class="bg-slate-800 border-t border-slate-700 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center text-gray-400">
+                © {% now "Y" %} Tech Help. Все права защищены.
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

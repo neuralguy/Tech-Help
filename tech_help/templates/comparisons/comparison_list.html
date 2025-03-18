@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Tech Help - Сравнения{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <!-- Заголовок и кнопка создания -->
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-white">Сравнения</h1>
+        {% if user.is_authenticated %}
+        <a href="{% url 'comparisons:comparison_create' %}" class="btn-primary">
+            <i class="fas fa-plus mr-2"></i>Создать сравнение
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Список сравнений -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    {% for comparison in comparisons %}
+    <a href="{% url 'comparisons:comparison_detail' comparison.slug %}"
+       class="block group">
+        <div class="card bg-slate-700/50 hover:bg-slate-700 transition-all duration-200 rounded-lg overflow-hidden hover:scale-105 flex">
+            <!-- Левая часть карточки -->
+            <div class="w-1/2 p-4 flex flex-col justify-between">
+                <div>
+                    <div class="flex flex-wrap gap-2 mb-2 justify-center">
+                        <span class="badge text-lg">{{ comparison.devices.first.name }}</span>
+                    </div>
+                    {% if comparison.devices.first.main_image %}
+                        <img src="{{ comparison.devices.first.main_image.url }}"
+                             alt="{{ comparison.title }}"
+                             class="w-full h-auto object-cover rounded-md">
+                    {% else %}
+                         <div class="w-full h-full bg-slate-800 flex items-center justify-center rounded-md mb-2">
+                            <i class="fas fa-camera text-3xl text-slate-600"></i>
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <!-- Вертикальная линия -->
+            <div class="border-r border-slate-600"></div>
+
+            <!-- Правая часть карточки -->
+            <div class="w-1/2 p-4 flex flex-col justify-between">
+                <div>
+                    <div class="flex flex-wrap gap-2 mb-2 justify-center">
+                        <span class="badge text-lg">{{ comparison.devices.last.name }}</span>
+                    </div>
+                     {% if comparison.devices.last.main_image %}
+                        <img src="{{ comparison.devices.last.main_image.url }}"
+                             alt="{{ comparison.title }}"
+                             class="w-full h-auto object-cover rounded-md">
+                    {% else %}
+                         <div class="w-full h-24 bg-slate-800 flex items-center justify-center rounded-md">
+                            <i class="fas fa-camera text-3xl text-slate-600"></i>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                <div>
+                     <!-- Кнопка "Подробнее" удалена, так как вся карточка - ссылка -->
+                </div>
+            </div>
+        </div>
+    </a>
+    {% empty %}
+    <div class="col-span-full text-center py-8">
+        <p class="text-gray-400">Сравнений пока нет</p>
+    </div>
+    {% endfor %}
+</div>
+
+</div>
+{% endblock %} 
