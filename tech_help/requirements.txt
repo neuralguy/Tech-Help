@@ -1,5 +1,0 @@
-django
-Pillow
-django-browser-reload
-unidecode
-django-ckeditor
