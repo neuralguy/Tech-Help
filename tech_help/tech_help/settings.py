@@ -26,17 +26,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     
     # Наши приложения
+    'home.apps.HomeConfig',
     'articles.apps.ArticlesConfig',
     'comparisons.apps.ComparisonsConfig',
     'users.apps.UsersConfig',
     'profiles.apps.ProfilesConfig',
     'devices.apps.DevicesConfig',
+    'accounts.apps.AccountsConfig',
     
     'django_browser_reload',
     'django_ckeditor_5',
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -115,7 +115,7 @@ class Device(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('comparisons:device_detail', kwargs={'slug': self.slug})
+        return reverse('devices:device_detail', args=[self.slug])
     
     def get_first_image(self):
         if self.main_image:

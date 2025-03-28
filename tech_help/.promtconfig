@@ -1,0 +1,6 @@
+{
+    "excludes": ["*.json", "staticfiles", "admin", "*.js", ".py", "media", "migrations", "tests/", "*.tmp"],
+    "includes": [],
+    "max_size": 10000,
+    "show_hidden": false
+}
