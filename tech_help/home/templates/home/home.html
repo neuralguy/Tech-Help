@@ -1,57 +1,103 @@
+<!-- home/templates/home/home.html -->
 {% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Tech Help - Главная{% endblock %}
-{% block head %}<link rel="stylesheet" href="{% static 'home/css/home.css' %}">{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'home/css/home.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="home-page">
-    <section class="hero">
-        <h1 class="hero__title">Добро пожаловать в Tech Help</h1>
-        <p class="hero__subtitle">Ваш путеводитель в мире современных технологий</p>
-        
-        <div class="features-grid">
-            <article class="feature-card">
-                <h2 class="feature-card__title">Статьи</h2>
-                <p class="feature-card__text">Читайте подробные обзоры и аналитику последних технологических новинок</p>
-                <a href="{% url 'articles:article_list' %}" class="feature-card__link">Читать статьи</a>
-            </article>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Tech Help</h1>
+            <p class="hero-subtitle">Ваш гид в мире технологий</p>
             
-            <article class="feature-card">
-                <h2 class="feature-card__title">Устройства</h2>
-                <p class="feature-card__text">Изучайте характеристики и отзывы о современных устройствах</p>
-                <a href="{% url 'devices:device_list' %}" class="feature-card__link">Смотреть устройства</a>
-            </article>
-            
-            <article class="feature-card">
-                <h2 class="feature-card__title">Сравнения</h2>
-                <p class="feature-card__text">Сравнивайте характеристики устройств и делайте осознанный выбор</p>
-                <a href="{% url 'comparisons:comparison_list' %}" class="feature-card__link">Сравнить устройства</a>
-            </article>
+            <form class="search-form">
+                <input type="text" 
+                       placeholder="Поиск устройств, статей и сравнений..." 
+                       class="search-input">
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
         </div>
     </section>
 
-    <section class="advantages-section">
-        <h2 class="section-title">Почему выбирают нас?</h2>
-        <div class="advantages-grid">
-            <div class="advantage-card">
-                <i class="advantage-icon fas fa-chart-line"></i>
-                <h3 class="advantage-title">Актуальная информация</h3>
-                <p class="advantage-text">Всегда свежие данные и последние новости</p>
+    <!-- Features Grid -->
+    <section class="features-section">
+        <div class="section-inner">
+            <h2 class="section-title">Почему выбирают нас?</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Мгновенный доступ</h3>
+                    <p>Актуальная информация о последних технологиях</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Экспертный анализ</h3>
+                    <p>Подробные сравнения и обзоры</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Сообщество</h3>
+                    <p>Общайтесь с единомышленниками</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Устройства</h3>
+                    <p>Самая полная база характеристик</p>
+                </div>
             </div>
-            <!-- Остальные advantage-card -->
         </div>
     </section>
 
-    {% if not user.is_authenticated %}
-    <section class="cta-section">
-        <h2 class="cta-title">Начните прямо сейчас!</h2>
-        <p class="cta-text">Присоединяйтесь к нашему сообществу и откройте для себя мир технологий</p>
-        <div class="cta-buttons">
-            <a href="{% url 'accounts:register' %}" class="btn btn--primary">Зарегистрироваться</a>
-            <a href="{% url 'accounts:login' %}" class="btn btn--secondary">Войти</a>
+    <!-- Content Sections -->
+    <section class="content-section">
+        <div class="section-inner">
+            <div class="text-media-block">
+                <div class="media-part">
+                    <img src="{{ MEDIA_URL }} media/devices/poco-x6-1.jpg" alt="Технологии">
+                </div>
+                <div class="text-part">
+                    <h2>Глубокий анализ</h2>
+                    <p>Профессиональные обзоры и детальные сравнения характеристик</p>
+                </div>
+            </div>
         </div>
     </section>
-    {% endif %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Анимация появления элементов
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card, .text-media-block').forEach((element) => {
+        observer.observe(element);
+    });
+});
+</script>
 {% endblock %}
