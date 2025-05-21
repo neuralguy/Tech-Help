@@ -62,7 +62,7 @@ def article_detail(request, slug):
 
 @login_required
 def add_comment(request, slug):
-    article = get_object_or_404(Article, slug)
+    article = get_object_or_404(Article, slug=slug)
     comments = article.comments.all()
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -71,28 +71,50 @@ def add_comment(request, slug):
             comment.article = article
             comment.author = request.user
             comment.save()
-            messages.success(request, 'Комментарий добавлен!')
             return redirect('articles:article_detail', slug=slug)
     return redirect('articles:article_detail', slug=slug)
 
 @login_required
-def handle_reaction(request, comment_id):
-    if request.method == 'POST':
-        comment = get_object_or_404(Comment, id=comment_id)
-        value = int(request.POST.get('value'))
-        
-        reaction, created = Reaction.objects.update_or_create(
-            user=request.user,
-            comment=comment,
-            defaults={'value': value}
-        )
-        
-        counts = comment.get_reaction_count()
-        return JsonResponse({
-            'likes': counts['likes'] or 0,
-            'dislikes': counts['dislikes'] or 0,
-            'user_reaction': value
-        })
+def delete_comment(request, slug, comment_id):
+    try:
+        article = Article.objects.get(slug=slug)
+        comment = Comment.objects.get(article=article, id=comment_id)
+        if request.user == comment.author or request.user.is_staff:
+            comment.delete()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False}, status=403)
+    except Exception as e:
+        print(f"Delete error: {str(e)}")
+        return JsonResponse({'success': False}, status=500)
+
+@login_required
+def edit_comment(request, slug, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.user == comment.author or request.user.is_staff:
+        new_text = request.POST.get('text', '')
+        comment.text = new_text
+        comment.save()
+        return JsonResponse({'success': True, 'new_text': comment.text})
+    return JsonResponse({'success': False}, status=403)
+
+@login_required
+def handle_reaction(request, slug, comment_id):
+    article = get_object_or_404(Article, slug=slug)
+    comment = get_object_or_404(Comment, id=comment_id, article=article)
+    value = int(request.POST.get('value'))
+    
+    reaction, created = Reaction.objects.update_or_create(
+        user=request.user,
+        comment=comment,
+        defaults={'value': value}
+    )
+    
+    counts = comment.get_reaction_count()
+    return JsonResponse({
+        'likes': counts['likes'] or 0,
+        'dislikes': counts['dislikes'] or 0,
+        'user_reaction': value
+    })
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
 

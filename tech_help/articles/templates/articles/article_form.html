@@ -5,54 +5,55 @@
 
 {% block head %}
 {{ form.media }}
+<link rel="stylesheet" href="{% static 'acticles/css/article_form.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8">
+<div class="form-container">
+    <div class="form-wrapper">
+        <h1 class="form-title">
             {% if article %}Редактировать{% else %}Создать{% endif %} статью
         </h1>
 
-        <form method="post" enctype="multipart/form-data" class="space-y-6 bg-slate-800 p-6 rounded-lg border border-slate-700">
+        <form method="post" enctype="multipart/form-data" class="article-form">
             {% csrf_token %}
             
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Заголовок</label>
+            <div class="form-group">
+                <label class="form-label">Заголовок</label>
                 {{ form.title }}
                 {% if form.title.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.title.errors.0 }}</p>
+                <p class="form-error">{{ form.title.errors.0 }}</p>
                 {% endif %}
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Категория</label>
+            <div class="form-group">
+                <label class="form-label">Категория</label>
                 {{ form.category }}
                 {% if form.category.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.category.errors.0 }}</p>
+                <p class="form-error">{{ form.category.errors.0 }}</p>
                 {% endif %}
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Изображение</label>
+            <div class="form-group">
+                <label class="form-label">Изображение</label>
                 {{ form.image }}
                 {% if form.image.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.image.errors.0 }}</p>
+                <p class="form-error">{{ form.image.errors.0 }}</p>
                 {% endif %}
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Содержание</label>
+            <div class="form-group">
+                <label class="form-label">Содержание</label>
                 {{ form.content }}
                 {% if form.content.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ form.content.errors.0 }}</p>
+                <p class="form-error">{{ form.content.errors.0 }}</p>
                 {% endif %}
             </div>
 
-            <button type="submit" class="highlight w-full btn-primary text-lg bg-black/30 py-4">
+            <button type="submit" class="btn-primary shine">
                 {% if article %}Сохранить изменения{% else %}Создать статью{% endif %}
             </button>
         </form>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
